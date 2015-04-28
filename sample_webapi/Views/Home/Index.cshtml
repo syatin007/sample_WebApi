@@ -1,0 +1,121 @@
+﻿<html>
+    <head>
+    <script src="~/Scripts/jquery-1.8.2.js"></script>
+        </head>
+    <body>
+<div>
+    
+    <script>
+        //get
+        $(document).ready(function () {
+            $.ajax({
+                url: "http://localhost:49901/api/Course/",
+                type: "Get",
+                success: function (data) { 
+                    for (var i = 0; i < data.length; i++) {
+                        $("<tr><td>" + data[i].CourseId + "</td><td>" + data[i].Title + "</td><td>" + data[i].Topic + "</td><td>" + data[i].Product + "</td><td>" + data[i].Description + "</td><td>" + data[i].CategoryId + "</td><td>" + data[i].rating + "</td><td><a id='" + data[i].CourseId + "' onclick='Edit(" + data[i].CourseId + ")'>Edit</a> </td><td><a id='" + data[i].CourseId + "' onclick='Delete(" + data[i].CourseId + ")'>DELETE</a> </td></tr>").appendTo("#table1 tbody");
+                    }
+                },
+                error: function (msg) { alert(msg); }
+            });
+     
+
+            //post
+
+
+
+
+            //$(document).ready(function () 
+            //{
+                $("#submit").click(function () {
+            
+                    var CourseId = $("#txtCourseId").val();
+                    var Title = $("#txtTitle").val();
+                    var Topic = $("#txtTopic").val();
+                    var Product = $("#txtProduct").val();
+                    var Description = $("#txtDescription").val();
+                    var CategoryId = $("#txtCategoryId").val();
+                    var rating = $("#txtRating").val();
+                    var sample = {
+                        CourseId: CourseId, Title: Title, Topic: Topic, Product: Product, Description: Description, CategoryId: CategoryId, rating: rating
+                    }
+                    $.ajax({
+                        url: "http://localhost:49901/api/Course",
+                        type: "Post",
+                        data: JSON.stringify(sample),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) { },
+                        error: function () { alert('error'); }
+                    });
+                });
+    
+        });
+        function Delete(CourseId) {
+
+            var id = CourseId;
+            $.ajax({
+                url: 'http://localhost:49901/api/Course?id=' + id,
+                type: 'DELETE',
+                dataType: 'json',
+                data: id,
+                success: function (data, textStatus, xhr) {
+                    console.log(data);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error in Operation');
+                }
+            });
+        };
+        function Edit(CourseId) {
+            //var sample = {
+            //    CourseId: CourseId, Title: Title, Topic: Topic, Product: Product, Description: Description, CategoryId: CategoryId, rating: rating
+            //}
+            var ID = CourseId;
+           $.ajax({
+                url: "http://localhost:49901/api/Course/GetCourse?id=" + ID,
+                type: "Get",
+                data: ID,
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    $("#txtCourseId").val(data.CourseId);
+                    $("#txtTitle").val(data.Title);
+                    $("#txtTopic").val(data.Topic);
+                    $("#txtProduct").val(data.Product);
+                    $("#txtDescription").val(data.Description);
+                    $("#txtCategoryId").val(data.CategoryId);
+                    $("#txtRating").val(data.rating);
+                },
+                error: function () { alert('error'); }
+            });
+        
+        };
+         
+
+    </script> 
+
+    <table id="table1" class="table table-hover">
+        <thead>
+            <th>CourseId</th>
+            <th>Title</th>
+            <th>Topic</th>
+            <th>Product</th>
+            <th>Description</th>
+            <th>CategoryId</th>
+            <th>Rating</th>
+            <th>Action</th>
+        </thead>
+        <tbody></tbody>
+
+    </table>
+
+   CourseId: <input type="text" id="txtCourseId" /><br />
+   Title:  <input type="text" id="txtTitle" /><br />
+   Topic:  <input type="text" id="txtTopic" /><br />
+   Product:  <input type="text" id="txtProduct" /><br />
+   Description: <input type="text" id="txtDescription" /><br />
+   Categoryid:  <input type="text" id="txtCategoryId" /><br />
+   Rating:  <input type="text" id="txtRating" /><br />
+    <input type="button" id="submit" value="submit" runat="server" />
+</div>
+</body>
+    </html>
